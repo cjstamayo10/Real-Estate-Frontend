@@ -1,4 +1,4 @@
-# Responsive Real Estate Landing Page using Next JS 14, Shadcn UI, Typescript, and Tailwind CSS
+# Responsive Real Estate Landing Page Using Next JS 14, Shadcn UI, Typescript, and Tailwind CSS
 
 This project aims to create a responsive landing page for a real estate business. It utilizes Next.js 14 for server-side rendering and routing, Shadcn UI for a pre-built component library, TypeScript for improved code quality and maintainability, and Tailwind CSS for rapid styling.
 
