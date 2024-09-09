@@ -6,16 +6,16 @@ This project aims to create a responsive landing page for a real estate business
 
 1. Open Terminal or Command Prompt.
 2. Navigate to the directory where you want to clone the project: "cd /path/to/your/directory"
-3. Clone the repository using Git: "git clone https://github.com/yourusername/your-reactjs-project.git"
+3. Clone the repository using Git: "git clone https://github.com/yourusername/your-nextjs-project.git"
 
 ### Step 2: Navigate into the Project Directory and Install Dependencies
 
-1. Go to the project directory: "cd your-reactjs-project"
+1. Go to the project directory: "cd your-nextjs-project"
 2. Install the necessary dependencies using "npm install" or "yarn install"
 
-### Step 3: Start the React App
+### Step 3: Start the Next JS App
 
-1. Run the start script to start the React development server: "npm start" or "yarn start"
+1. Run the start script to start the Next JS development server: "npm start" or "yarn start"
 
 ### After following the steps above, the app will open in your default browser.
 
