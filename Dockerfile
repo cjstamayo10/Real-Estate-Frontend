@@ -14,6 +14,8 @@ COPY . .
 
 ENV NEXT_TELEMETRY_DISABLED 1
 
+RUN npm install
+
 RUN npm run build
 
 FROM base AS runner
