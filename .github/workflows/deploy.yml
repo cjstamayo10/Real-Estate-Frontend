@@ -1,0 +1,29 @@
+name: Deploy to GCP Cloud Run
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Build Next.js app
+        run: npm run build
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v0
+        with:
+          credentials_file: ${{ secrets.GCP_SA_KEY }}
+      - name: Deploy to Cloud Run
+        uses: google-github-actions/deploy-cloudrun@v1
+        with:
+          image: gcr.io/${{ secrets.test-project-438109 }}/nextjs-app:latest
+          platform: managed
+          region: us-central1 # Replace with your desired region
+          service: nextjs-app
+          allow-unauthenticated: false # Adjust as needed
