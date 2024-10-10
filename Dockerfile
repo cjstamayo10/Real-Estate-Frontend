@@ -1,29 +1,51 @@
-# Use a Node.js base image with minimal overhead
-FROM node:18-alpine AS builder
+FROM node:22.5.1-alpine3.20 AS base
 
-# Set the working directory
+FROM base AS deps
+
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
-# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
-# Install dependencies
-RUN apk add --no-cache git && npm install
+RUN npm ci
 
-# Copy the rest of the project files
-COPY . .
-
-# Build the Next.js app (separate stage for clarity)
-FROM node:18-alpine
+FROM base AS builder
 
 WORKDIR /app
 
-COPY --from=builder /app .
+COPY --from=deps /app/node_modules ./node_modules
+
+COPY . .
+
+ENV NEXT_TELEMETRY_DISABLED 1
 
 RUN npm run build
 
-# Expose the port for serving the app
+FROM base AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV production
+
+ENV NEXT_TELEMETRY_DISABLED 1
+
+RUN addgroup --system --gid 1001 nodejs
+
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=builder /app/public ./public
+
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
+
+COPY --from=builder /app/node_modules ./node_modules
+
+COPY --from=builder /app/package.json ./package.json
+
+USER nextjs
+
 EXPOSE 3000
 
-# Start the Next.js app
-CMD ["npm", "start"]
+ENV PORT 3000
+
+CMD ["npm","start"]
