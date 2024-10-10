@@ -1,5 +1,5 @@
-# Use a Node.js base image
-FROM node:18-alpine
+# Use a Node.js base image with minimal overhead
+FROM node:18-alpine AS builder
 
 # Set the working directory
 WORKDIR /app
@@ -8,12 +8,18 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN apk add --no-cache git && npm install
 
 # Copy the rest of the project files
 COPY . .
 
-# Build the Next.js app
+# Build the Next.js app (separate stage for clarity)
+FROM node:18-alpine
+
+WORKDIR /app
+
+COPY --from=builder /app .
+
 RUN npm run build
 
 # Expose the port for serving the app
