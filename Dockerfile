@@ -12,16 +12,16 @@ RUN ln -s lib lib64
 FROM base AS pruner
 
 # Set working directory
-WORKDIR /
+WORKDIR /usr/app
 
 # Copies the whole git repository excluding those that are in .dockerignore
-COPY . .
+COPY ./ ./
 
 # BUILDER
 FROM base AS builder
 
 # Set working directory
-WORKDIR /
+WORKDIR /usr/app
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
@@ -34,7 +34,7 @@ RUN npm run build --filter=web
 FROM base AS runner
 
 # Set working directory
-WORKDIR /
+WORKDIR /usr/app
 
 # Don't run production as root
 # Run as nextjs
