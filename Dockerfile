@@ -12,10 +12,10 @@ RUN ln -s lib lib64
 FROM base AS builder
 
 # Set working directory
-WORKDIR ./ .
+WORKDIR ./ 
 
 # First install the dependencies (as they change less often)
-COPY ./.gitignore ./.gitignore
+COPY .gitignore .gitignore
 RUN npm install
 
 # Build the project
@@ -25,7 +25,7 @@ RUN npm run build --filter=web
 FROM base AS runner
 
 # Set working directory
-WORKDIR ./ .
+WORKDIR ./ 
 
 # Don't run production as root
 # Run as nextjs
