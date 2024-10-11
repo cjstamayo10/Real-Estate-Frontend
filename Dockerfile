@@ -8,6 +8,15 @@ RUN apk add --no-cache libc6-compat
 RUN apk update
 RUN ln -s lib lib64
 
+# PRUNER
+FROM base AS pruner
+
+# Set working directory
+WORKDIR /app
+
+# Copies the whole git repository excluding those that are in .dockerignore
+COPY . .
+
 # BUILDER
 FROM base AS builder
 
