@@ -12,7 +12,7 @@ RUN ln -s lib lib64
 FROM base AS builder
 
 # Set working directory
-WORKDIR /usr/app
+WORKDIR ./
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
@@ -25,7 +25,7 @@ RUN npm run build --filter=web
 FROM base AS runner
 
 # Set working directory
-WORKDIR /usr/app
+WORKDIR ./
 
 # Don't run production as root
 # Run as nextjs
@@ -33,8 +33,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=builder next.config.mjs .
-COPY --from=builder package.json .
+COPY --from=builder ./next.config.mjs .
+COPY --from=builder ./package.json .
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
