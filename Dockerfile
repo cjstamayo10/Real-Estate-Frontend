@@ -19,7 +19,7 @@ COPY . .
 RUN npm install -g
 
 # Build the project
-RUN npm run build --filter=web
+RUN npm run build
 
 # RUNNER
 FROM base AS runner
