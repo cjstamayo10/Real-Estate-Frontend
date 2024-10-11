@@ -16,7 +16,6 @@ WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY . .
-COPY .gitignore .gitignore
 RUN npm install -g
 
 # Build the project
@@ -34,8 +33,8 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 USER nextjs
 
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app/package.json ./package.json
+COPY --from=builder /app/apps/web/next.config.mjs .
+COPY --from=builder /app/apps/web/package.json .
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
