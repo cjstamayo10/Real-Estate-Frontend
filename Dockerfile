@@ -1,51 +1,40 @@
-FROM node:22.5.1-alpine3.20 AS base
-
-FROM base AS deps
-
-RUN apk add --no-cache libc6-compat
-
-WORKDIR /app
-
-COPY package*.json ./
-
-RUN npm ci
-
+# BUILDER
 FROM base AS builder
 
+# Set working directory
 WORKDIR /app
 
-COPY --from=deps /app/node_modules ./node_modules
+# First install the dependencies (as they change less often)
+COPY .gitignore .gitignore
+COPY --from=pruner /app/out/json/ .
+RUN npm install
 
-COPY . .
+# Build the project
+COPY --from=pruner /app/out/full/ .
+RUN npm run build --filter=web
 
-ENV NEXT_TELEMETRY_DISABLED 1
-
-RUN npm run build
-
+# RUNNER
 FROM base AS runner
 
+# Set working directory
 WORKDIR /app
 
-ENV NODE_ENV production
-
-ENV NEXT_TELEMETRY_DISABLED 1
-
+# Don't run production as root
+# Run as nextjs
 RUN addgroup --system --gid 1001 nodejs
-
 RUN adduser --system --uid 1001 nextjs
-
-COPY --from=builder /app/public ./public
-
-COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
-
-COPY --from=builder /app/node_modules ./node_modules
-
-COPY --from=builder /app/package.json ./package.json
-
 USER nextjs
 
-EXPOSE 3000
+COPY --from=builder /app/next.config.mjs .
+COPY --from=builder /app/package.json .
 
+# Automatically leverage output traces to reduce image size
+# https://nextjs.org/docs/advanced-features/output-file-tracing
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/apps/web/public ./apps/web/public
+
+# Run the server
+EXPOSE 3000/tcp
 ENV PORT 3000
-
-CMD ["npm","start"]
+CMD node apps/web/server.js
