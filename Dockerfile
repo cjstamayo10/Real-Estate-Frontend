@@ -12,7 +12,7 @@ RUN ln -s lib lib64
 FROM base AS pruner
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # Copies the whole git repository excluding those that are in .dockerignore
 COPY . .
@@ -21,7 +21,7 @@ COPY . .
 FROM base AS builder
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
