@@ -34,7 +34,7 @@ RUN npm run build --filter=web
 FROM base AS runner
 
 # Set working directory
-WORKDIR /app
+WORKDIR /
 
 # Don't run production as root
 # Run as nextjs
