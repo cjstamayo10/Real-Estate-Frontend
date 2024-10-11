@@ -25,11 +25,9 @@ WORKDIR /app
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
-COPY --from=pruner /app/out/json/ .
 RUN npm install
 
 # Build the project
-COPY --from=pruner /app/out/full/ .
 RUN npm run build --filter=web
 
 # RUNNER
