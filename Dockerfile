@@ -16,7 +16,7 @@ WORKDIR ./
 
 # First install the dependencies (as they change less often)
 COPY .gitignore .gitignore
-RUN npm install
+RUN npm install -g
 
 # Build the project
 RUN npm run build --filter=web
