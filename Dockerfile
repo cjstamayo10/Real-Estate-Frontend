@@ -15,6 +15,7 @@ FROM base AS builder
 WORKDIR /app
 
 # First install the dependencies (as they change less often)
+COPY . .
 COPY .gitignore .gitignore
 RUN npm install -g
 
